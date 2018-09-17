@@ -1,0 +1,17 @@
+
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# TMB
+*.o
+*.dll
+
+# Other
+*.xlxs
+*.ppt
+*.pptx
+*.doc
+*.docx
