@@ -3,6 +3,7 @@
 .Rproj.user
 .Rhistory
 .RData
+*.RData
 .Ruserdata
 
 # TMB
@@ -15,3 +16,6 @@
 *.pptx
 *.doc
 *.docx
+*.png
+
+Home1/*.Rmd
