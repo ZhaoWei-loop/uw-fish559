@@ -115,7 +115,7 @@ MCMCSumm <- function(file,best,Nyear,data,map,parameters)
 
 ################################################################################
 
-setwd("D:\\courses\\FISH 559_18\\TMB Workshop\\Lecture Examples\\")
+setwd("C:\\Users\\jysullivan\\Documents\\uw-fish559\\tmb-workshop-fhl\\Day3\\")
 
 require(TMB)
 

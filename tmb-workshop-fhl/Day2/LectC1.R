@@ -1,5 +1,6 @@
 library(TMB)
-setwd("D:\\courses\\FISH 559_18\\TMB Workshop\\In Class Examples\\")
+setwd("tmb-workshop-fhl/day2")
+
 parameters <- c(x=1)
 m1 <- matrix(c(1,2,3,4),ncol=2,nrow=2)
 m2 <- matrix(c(1,2,3,4,5,6),ncol=3,nrow=2)

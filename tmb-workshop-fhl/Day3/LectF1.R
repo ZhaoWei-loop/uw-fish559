@@ -1,5 +1,5 @@
-OutDir <- "D:\\courses\\FISH 559_18\\TMB Workshop\\Lecture Examples\\"
-InpDir <- "D:\\courses\\FISH 559_18\\TMB Workshop\\Lecture Examples\\"
+OutDir <- "C:\\Users\\jysullivan\\Documents\\uw-fish559\\tmb-workshop-fhl\\Day3\\"
+InpDir <- "C:\\Users\\jysullivan\\Documents\\uw-fish559\\tmb-workshop-fhl\\Day3\\"
 
 lectF<-function()
 {
@@ -7,15 +7,23 @@ lectF<-function()
  Xinit <- Case1()
 # Xinit <- c(log(40),log(60),-1)
 
- # Poor choice
- sd <- c(0.1,0.1,0.1)
+ # Poor choice - says they shouldn't be correlated at all
+ # sd = how far you just
+ # cor = how correlated the jumps are between points
+ # sd <- c(0.1,0.1,0.1)
+ # cor <- matrix(c(1,0,0,0,1,0,0,0,1),ncol=3,nrow=3)
+ # DoMCMC(Xinit,3,sd,cor,Nsim=10000,Nburn=1,Nthin=5)
+ # 
+ # Good choice
+ # sd <- c(0.015702,0.0093949,0.17678)
+ # cor <- matrix(c(1,0.3769,0,0.3769,1,0,0,0,1),ncol=3,nrow=3)
+ # DoMCMC(Xinit,3,sd,cor,Nsim=10000,Nburn=1,Nthin=5)
+ 
+ # Good choice sd with poor choice correlation
+ sd <- c(0.015702,0.0093949,0.17678)
  cor <- matrix(c(1,0,0,0,1,0,0,0,1),ncol=3,nrow=3)
  DoMCMC(Xinit,3,sd,cor,Nsim=10000,Nburn=1,Nthin=5)
  
- # Good choice
- #sd <- c(0.015702,0.0093949,0.17678)
- #cor <- matrix(c(1,0.3769,0,0.3769,1,0,0,0,1),ncol=3,nrow=3)
- #DoMCMC(Xinit,3,sd,cor,Nsim=10000,Nburn=1,Nthin=5)
  
  Case3(paste(OutDir,"Res.Out",sep=""))
 }
@@ -33,7 +41,7 @@ Case3<-function(FileN)
 }
 Case1<-function()
 {
- FileN <- paste(InpDir,"lectF.txt",sep="")    
+ FileN <- paste(InpDir,"LECTF.txt",sep="")    
  TheData<-scan(file=FileN,what=list(Length=0,Prob=0))
  co <- NULL
  co$Length <- TheData$Length
@@ -44,7 +52,7 @@ Case1<-function()
  xinit <- c(log(40),log(80),log(5))
  result<- optim(xinit,f1)   
  print(result)
- AAA
+ # AAA
  xfinal <- result$par
  Pred <- MakePred(TheData$Length,exp(xfinal[1]),exp(xfinal[2]))
  plot(TheData$Length,TheData$Prob,type='p',pch=16,lty=1,xlab="Length",ylab="Probability")
@@ -77,12 +85,14 @@ f1 <- function(x)
 }
 
 # =================================================================================================================
-
+# Xinit - initial params
+# Ndim - dimensions
+# sd and correlation
 DoMCMC<-function(Xinit,Ndim,sd,cor,Nsim=1000,Nburn=0,Nthin=1)
 {
     
  library(mvtnorm)
- FileN <- paste(InpDir,"lectF.txt",sep="")    
+ FileN <- paste(InpDir,"LECTF.txt",sep="")    
  TheData<-scan(file=FileN,what=list(Length=0,Prob=0))
  co <- NULL
  co$Length <- TheData$Length
@@ -104,14 +114,17 @@ DoMCMC<-function(Xinit,Ndim,sd,cor,Nsim=1000,Nburn=0,Nthin=1)
  Ipnt <- 0; Icnt <- 0
  for (Isim in 1:Nsim)
   {
+   # Proposal *changes all 3 versions of Xcurr at once
     Xnext <- rmvnorm(1, mean=Xcurr, sigma=covar)
     Fnext <- -1*f1(Xnext)
     Rand1 <- log(runif(1,0,1))
-    if (Fnext > Fcurr+Rand1)
-     {Fcurr <- Fnext; Xcurr <- Xnext }   
-    if (Isim %% Nthin == 0)
+    if (Fnext > Fcurr+Rand1) # Acceptance criterior (see slide 5 in LecF)
+    {Fcurr <- Fnext; Xcurr <- Xnext }  
+    # Thinning:
+    if (Isim %% Nthin == 0) # %% modulus function (gives you the remainder if you divide two functions)
      {
       Ipnt <- Ipnt + 1
+      # Burn in
       if (Ipnt > Nburn) { Icnt <- Icnt + 1; Outs[Icnt,] <- c(Xcurr,Fcurr); }    
      }
   } 

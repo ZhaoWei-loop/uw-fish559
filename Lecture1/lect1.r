@@ -1,4 +1,12 @@
-setwd("D:\\COURSES\\FISH 559_18\\LECTURES\\")
+setwd("~/uw-fish559/Lecture1")
+
+# 6 streams, 3 data points within each stream
+# what is the density of a typical stream? (ie mean population density) - fixed effects
+
+# what is the variance in density across streams (ie population variance) - fixed effects
+
+# What is the variation in density estimates within a stream?
+
 
 Lecture1<-function()                    
 {
@@ -17,21 +25,21 @@ Case1<-function()
  print(Streams)
     
  print("Linear Fixed Effects Model")
- lm1 <- lm(Density~1,data=Streams)  
+ lm1 <- lm(Density~1,data=Streams)  #only intercept, only mean model
  boxplot(split(lm1$residuals,Streams$Stream),ylab="Residual",xlab="Stream",csi=0.2)
  abline(0,0,lwd=3)
  print(summary(lm1))
  print(paste("AIC ",AIC(lm1)))
 
  print("Linear Fixed Effects Model")
- lm2 <- lm(Density~Stream-1,data=Streams)   
+ lm2 <- lm(Density~Stream-1,data=Streams) #-1 fits means for each stream (contrast); individual mean for each stream
  boxplot(split(lm2$residuals,Streams$Stream),ylab="Residual",xlab="Stream",csi=0.2)
  abline(0,0,lwd=3)
  print(summary(lm2))
  print(paste("AIC ",AIC(lm2)))
 
  print("Linear Mixed Effects Model")
- lm3 <- lme(fixed = Density ~ 1,data=Streams,random = ~ 1 | Stream) 
+ lm3 <- lme(fixed = Density ~ 1,data=Streams, random = ~ 1 | Stream) 
  boxplot(split(lm3$residuals,Streams$Stream),ylab="Residual",xlab="Stream",csi=0.2)
  abline(0,0,lwd=3)
  print(summary(lm3))

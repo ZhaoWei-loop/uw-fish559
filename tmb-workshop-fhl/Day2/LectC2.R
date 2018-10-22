@@ -1,4 +1,4 @@
-setwd("D:\\courses\\FISH 559_18\\TMB Workshop\\Lecture Examples\\")
+setwd("tmb-workshop-fhl/Day2")
 
 hake <- read.table("LectC2.dat", header=TRUE)
 names(hake) <- c("t", "C", "I")
@@ -12,7 +12,9 @@ dyn.load(dynlib("LectC2"))
 
 ################################################################################
 
-model <- MakeADFun(hake, parameters,DLL="LectC2",control=list(eval.max=10000,iter.max=1000,rel.tol=1e-15),silent=T)
+model <- MakeADFun(hake, parameters,DLL="LectC2",
+                   # increase time to minimize and increase tolerance (get closer to minimum)
+                   control=list(eval.max=10000,iter.max=1000,rel.tol=1e-15),silent=T)
 print(attributes(model))
 
 fit <- nlminb(model$par, model$fn, model$gr)
